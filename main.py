@@ -30,7 +30,7 @@ def _env(name: str, default: str = "") -> str:
 
 
 BARK_SERVER = _env("BARK_SERVER", "https://api.day.app").rstrip("/")
-BARK_KEY = _env("BARK_KEY")
+BARK_KEY = _env("BARK_KEY").strip()
 LLM_API_KEY = _env("DEEPSEEK_API_KEY") or _env("LLM_API_KEY")
 LLM_BASE_URL = _env("LLM_BASE_URL", "https://api.deepseek.com").rstrip("/")
 LLM_MODEL = _env("LLM_MODEL", "deepseek-chat")
@@ -180,10 +180,12 @@ def push_bark(text: str, title: str):
         "sound": "minuet",
     }
     resp = requests.post(f"{BARK_SERVER}/push", json=payload, timeout=30)
-    if resp.status_code != 200:
-        print(f"[error] Bark 返回 {resp.status_code}: {resp.text}", file=sys.stderr)
+    print(f"[info] Bark 响应 {resp.status_code}: {resp.text}", file=sys.stderr)
     resp.raise_for_status()
-    return resp.json()
+    data = resp.json()
+    if data.get("code") not in (200, None):
+        raise RuntimeError(f"Bark 返回错误: {data}")
+    return data
 
 
 def main():
