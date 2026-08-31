@@ -1,6 +1,6 @@
 # 每日科技早报推送
 
-每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（全能消息推送Bark），并可通过 iOS 快捷指令在车内语音朗读。
+每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
 
 ## 工作原理
 
@@ -20,7 +20,7 @@ iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 
 - **GitHub**：把本项目代码推到一个仓库（建议 Public，方便快捷指令免鉴权拉取）。
 - **DeepSeek**：到 [platform.deepseek.com](https://platform.deepseek.com) 创建 API Key。
-- **推送 App**：iPhone 安装「全能消息推送Bark」，打开后复制你的推送 Token（形如 `9BC3C676...`），推送地址为 `https://www.ggsuper.com.cn/sendMsg.php?token=你的token`。
+- **Bark**：iPhone 安装 [Bark](https://apps.apple.com/app/bark-customed-notifications/id1403753865)，打开后首页复制你的推送 Key（形如 `xxxxx`），即可得到推送地址 `https://api.day.app/xxxxx`。
 
 ### 2. 配置 GitHub Secrets
 
@@ -28,14 +28,14 @@ iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 
 | Secret | 值 |
 |--------|----|
-| `BARK_KEY` | 推送 App 的 Token |
+| `BARK_KEY` | Bark App 首页的 Key |
 | `DEEPSEEK_API_KEY` | DeepSeek 的 API Key |
 
 可选（默认无需设置）：
 
 | Secret | 默认值 | 说明 |
 |--------|--------|------|
-| `PUSH_URL` | `https://www.ggsuper.com.cn/push/api/v1/sendMsg3_New.php` | 自建推送服务时填写 |
+| `BARK_SERVER` | `https://api.day.app` | 自建 Bark 服务时填写 |
 | `LLM_BASE_URL` | `https://api.deepseek.com` | 换其他 OpenAI 兼容接口时填写 |
 | `LLM_MODEL` | `deepseek-chat` | 模型名 |
 
