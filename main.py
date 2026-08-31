@@ -135,13 +135,13 @@ def select_candidates(items: list[Item], cfg: dict[str, Any]) -> list[dict[str, 
     return selected
 
 
-def summarize(candidates: list[dict[str, Any]]) -> str:
+def summarize(candidates: list[dict[str, Any]], date_cn: str) -> str:
     prompt_tpl = (CONFIG_DIR / "prompt.txt").read_text(encoding="utf-8")
     lines = []
     for it in candidates:
         lines.append(f"{it['title']} | {it['source']} | {it['category']}")
     items_text = "\n".join(lines)
-    prompt = prompt_tpl.replace("{items}", items_text)
+    prompt = prompt_tpl.replace("{date}", date_cn).replace("{items}", items_text)
 
     if not LLM_API_KEY:
         raise RuntimeError("缺少 DEEPSEEK_API_KEY 环境变量")
@@ -212,8 +212,13 @@ def main():
         print("[dry-run] 跳过摘要与推送")
         return
 
-    text = summarize(candidates)
-    print("[info] 播报稿生成完成，长度", len(text))
+    date_cn = time.strftime("%m月%d日")
+    try:
+        text = summarize(candidates, date_cn)
+        print("[info] 播报稿生成完成，长度", len(text))
+    except Exception as e:  # noqa: BLE001
+        print(f"[error] 摘要生成失败: {e}", file=sys.stderr)
+        text = f"今天（{date_cn}）的科技早报暂时没能生成，请稍后手动刷新查看，或检查 DeepSeek 服务与额度是否正常。"
 
     SUMMARY_DIR.mkdir(exist_ok=True)
     (SUMMARY_DIR / "latest.txt").write_text(text, encoding="utf-8")
@@ -223,8 +228,11 @@ def main():
         return
 
     title = time.strftime("科技早报 · %m月%d日")
-    push_bark(text, title)
-    print("[info] 已推送 Bark")
+    try:
+        push_bark(text, title)
+        print("[info] 已推送 Bark")
+    except Exception as e:  # noqa: BLE001
+        print(f"[error] Bark 推送失败: {e}", file=sys.stderr)
 
 
 if __name__ == "__main__":
