@@ -26,7 +26,7 @@ jobs:
         env:
           BARK_KEY: ${{ secrets.BARK_KEY }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          BARK_SERVER: ${{ secrets.BARK_SERVER }}
+          PUSH_URL: ${{ secrets.PUSH_URL }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}
         run: python main.py
