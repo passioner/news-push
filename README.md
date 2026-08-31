@@ -1,6 +1,6 @@
 # 每日科技早报推送
 
-每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
+每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（全能消息推送Bark），并可通过 iOS 快捷指令在车内语音朗读。
 
 ## 工作原理
 
@@ -10,7 +10,7 @@ GitHub Actions 定时(07:00) → main.py
    ├─ 关键词过滤 + 去重
    ├─ DeepSeek 生成 300~500 字中文播报稿
    ├─ 写入 summary/latest.txt 并提交到仓库
-   └─ Bark 推送到 iPhone（通知栏文字）
+   └─ 推送到 iPhone（通知栏文字）
 iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 ```
 
@@ -20,7 +20,7 @@ iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 
 - **GitHub**：把本项目代码推到一个仓库（建议 Public，方便快捷指令免鉴权拉取）。
 - **DeepSeek**：到 [platform.deepseek.com](https://platform.deepseek.com) 创建 API Key。
-- **Bark**：iPhone 安装 [Bark](https://apps.apple.com/app/bark-customed-notifications/id1403753865)，打开后首页复制你的推送 Key（形如 `xxxxx`），即可得到推送地址 `https://api.day.app/xxxxx`。
+- **推送 App**：iPhone 安装「全能消息推送Bark」，打开后复制你的推送 Token（形如 `9BC3C676...`），推送地址为 `https://www.ggsuper.com.cn/sendMsg.php?token=你的token`。
 
 ### 2. 配置 GitHub Secrets
 
@@ -28,14 +28,14 @@ iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 
 | Secret | 值 |
 |--------|----|
-| `BARK_KEY` | Bark App 首页的 Key |
+| `BARK_KEY` | 推送 App 的 Token |
 | `DEEPSEEK_API_KEY` | DeepSeek 的 API Key |
 
 可选（默认无需设置）：
 
 | Secret | 默认值 | 说明 |
 |--------|--------|------|
-| `BARK_SERVER` | `https://api.day.app` | 自建 Bark 服务时填写 |
+| `PUSH_URL` | `https://www.ggsuper.com.cn/push/api/v1/sendMsg3_New.php` | 自建推送服务时填写 |
 | `LLM_BASE_URL` | `https://api.deepseek.com` | 换其他 OpenAI 兼容接口时填写 |
 | `LLM_MODEL` | `deepseek-chat` | 模型名 |
 
@@ -48,7 +48,7 @@ git remote add origin <你的仓库地址>
 git push -u origin main
 ```
 
-推上去后，在 Actions 页面的 `Daily News Push` 工作流里点 **Run workflow** 手动跑一次，验证 iPhone 能收到 Bark 通知。
+推上去后，在 Actions 页面的 `Daily News Push` 工作流里点 **Run workflow** 手动跑一次，验证 iPhone 能收到推送通知。
 
 ### 4. 配置 iOS 语音朗读
 
@@ -67,7 +67,7 @@ git push -u origin main
 
 播报稿开头会强制带上当天日期（如"早上好，今天是08月31日"），一听即可判断是否为今日内容。
 
-若模型生成失败，脚本会把 `latest.txt` 覆盖为明确的失败提示（含当天日期），而**不会保留昨天的旧闻**，同时向 Bark 推送失败提醒。因此：
+若模型生成失败，脚本会把 `latest.txt` 覆盖为明确的失败提示（含当天日期），而**不会保留昨天的旧闻**，同时向手机推送失败提醒。因此：
 
 - 听到「今天是X月X日」→ 是当天内容；
 - 听到「今天…暂时没能生成」→ 当天失败，非旧闻；
