@@ -233,12 +233,15 @@ def main():
         print("[no-push] 已生成 summary/latest.txt，跳过推送")
         return
 
-    title = time.strftime("科技早报 · %m月%d日")
-    try:
-        push_bark(text, title)
-        print("[info] 已推送 Bark")
-    except Exception as e:  # noqa: BLE001
-        print(f"[error] Bark 推送失败: {e}", file=sys.stderr)
+    if BARK_KEY:
+        title = time.strftime("科技早报 · %m月%d日")
+        try:
+            push_bark(text, title)
+            print("[info] 已推送 Bark")
+        except Exception as e:  # noqa: BLE001
+            print(f"[error] Bark 推送失败: {e}", file=sys.stderr)
+    else:
+        print("[info] 未配置 BARK_KEY，跳过推送（纯语音朗读模式）")
 
 
 if __name__ == "__main__":
