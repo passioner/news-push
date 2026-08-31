@@ -174,13 +174,14 @@ def push_bark(text: str, title: str):
     payload = {
         "title": title,
         "body": text,
-        "device_key": BARK_KEY,
+        "device_keys": [BARK_KEY],
         "group": "科技早报",
         "level": "timeSensitive",
-        "sound": "minute",
-        "autoCopy": text,
+        "sound": "minuet",
     }
     resp = requests.post(f"{BARK_SERVER}/push", json=payload, timeout=30)
+    if resp.status_code != 200:
+        print(f"[error] Bark 返回 {resp.status_code}: {resp.text}", file=sys.stderr)
     resp.raise_for_status()
     return resp.json()
 
