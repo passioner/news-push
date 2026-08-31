@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 敏感信息
+.env
+
+# 系统
+.DS_Store

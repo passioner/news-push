@@ -1,0 +1,101 @@
+# 新闻源与关键词配置
+# 说明：以下 RSS 地址为常用源，首次部署后请按需增删。
+# category 取值：科技 / 苹果 / AI / 芯片 / RC模型 / 娱乐
+
+feeds:
+  # ---- 科技综合 ----
+  - name: 少数派
+    url: https://sspai.com/feed
+    category: 科技
+  - name: 36氪
+    url: https://36kr.com/feed
+    category: 科技
+  - name: 爱范儿
+    url: https://www.ifanr.com/feed
+    category: 科技
+  - name: 虎嗅
+    url: https://www.huxiu.com/rss/0.xml
+    category: 科技
+  - name: 极客公园
+    url: https://www.geekpark.net/rss
+    category: 科技
+
+  # ---- 苹果 ----
+  - name: MacRumors
+    url: https://feeds.macrumors.com/MacRumors-All
+    category: 苹果
+  - name: 9to5Mac
+    url: https://9to5mac.com/feed/
+    category: 苹果
+
+  # ---- AI ----
+  - name: 机器之心
+    url: https://www.jiqizhixin.com/rss
+    category: AI
+  - name: 量子位
+    url: https://www.qbitai.com/feed
+    category: AI
+
+  # ---- RC / 模型 / 穿越机 ----
+  - name: DroneDJ
+    url: https://dronedj.com/feed/
+    category: RC模型
+  - name: Hackaday
+    url: https://hackaday.com/feed/
+    category: RC模型
+  # Google 新闻聚合（在 GitHub Actions 美国机房可访问，本地/国内网络可能不通）
+  - name: Google新闻·穿越机无人机
+    url: https://news.google.com/rss/search?q=穿越机 OR FPV OR 无人机 OR 航模 OR 车模&hl=zh-CN&gl=CN&ceid=CN:zh-Hans
+    category: RC模型
+
+  # ---- 娱乐（仅现象级事件由 LLM 判断纳入）----
+  - name: 新浪滚动新闻
+    url: https://rss.sina.com.cn/news/marquee/ddt.xml
+    category: 娱乐
+
+# 关键词过滤：标题命中任一关键词即进入候选（不区分大小写）
+keywords:
+  - 芯片
+  - 半导体
+  - 晶圆
+  - 光刻
+  - 制程
+  - 苹果
+  - Apple
+  - iPhone
+  - iPad
+  - Mac
+  - iOS
+  - AirPods
+  - Vision Pro
+  - AI
+  - 人工智能
+  - 大模型
+  - GPT
+  - 生成式
+  - 机器学习
+  - 英伟达
+  - NVIDIA
+  - 高通
+  - 联发科
+  - 台积电
+  - 中芯
+  - 穿越机
+  - FPV
+  - drone
+  - quad
+  - 无人机
+  - 车模
+  - 船模
+  - 航模
+  - RC
+  - 模型
+
+# 回溯时间窗口（小时）
+lookback_hours: 36
+
+# 每个科技源兜底保留的最新条目数（即使不含关键词，也纳入供 LLM 判断）
+top_n_per_feed: 3
+
+# 候选总数上限（发给 LLM 的条目数）
+max_candidates: 60
