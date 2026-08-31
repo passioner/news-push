@@ -63,6 +63,19 @@ git push -u origin main
 
 > 私有仓库：快捷指令默认无法免鉴权读取。可在「获取 URL 的内容」里改用带 token 的请求，或改用公开仓库。
 
+### 5. 国内网络访问 GitHub（可选）
+
+若 iPhone 无法访问 `raw.githubusercontent.com`（国内常见），可用 Shadowrocket 等代理工具做分流，只让 GitHub 走代理、其余直连，避免影响其他应用：
+
+```
+DOMAIN-SUFFIX,github.com,PROXY
+DOMAIN-SUFFIX,githubusercontent.com,PROXY
+DOMAIN-SUFFIX,githubassets.com,PROXY
+DOMAIN-SUFFIX,github.io,PROXY
+```
+
+并确保路由模式为「配置」(Config)、末尾 `FINAL` 规则为 `DIRECT`。
+
 ## 如何确认内容是最新的
 
 播报稿开头会强制带上当天日期（如"早上好，今天是08月31日"），一听即可判断是否为今日内容。
