@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""每日科技热点聚合 + AI 摘要 + Bark 推送。
+"""每日科技热点聚合 + AI 摘要 + 推送。
 
-流程：拉取 RSS -> 关键词过滤/去重 -> DeepSeek 生成播报稿 -> 写文件 + Bark 推送。
+流程：拉取 RSS -> 关键词过滤/去重 -> DeepSeek 生成播报稿 -> 写文件 + 推送。
 本地测试：python main.py --dry-run          # 不推送、不写 summary
            python main.py --no-push         # 生成 summary 但不推送
 """
@@ -29,8 +29,9 @@ def _env(name: str, default: str = "") -> str:
     return v if v else default
 
 
-BARK_SERVER = _env("BARK_SERVER", "https://api.day.app").rstrip("/")
 BARK_KEY = _env("BARK_KEY").strip()
+PUSH_URL = _env("PUSH_URL", "https://www.ggsuper.com.cn/push/api/v1/sendMsg3_New.php")
+PUSH_TOKEN = _env("PUSH_TOKEN").strip() or BARK_KEY
 LLM_API_KEY = _env("DEEPSEEK_API_KEY") or _env("LLM_API_KEY")
 LLM_BASE_URL = _env("LLM_BASE_URL", "https://api.deepseek.com").rstrip("/")
 LLM_MODEL = _env("LLM_MODEL", "deepseek-chat")
@@ -169,22 +170,22 @@ def summarize(candidates: list[dict[str, Any]], date_cn: str) -> str:
 
 
 def push_bark(text: str, title: str):
-    if not BARK_KEY:
-        raise RuntimeError("缺少 BARK_KEY 环境变量")
+    if not PUSH_TOKEN:
+        raise RuntimeError("缺少推送 token（PUSH_TOKEN 或 BARK_KEY）")
     payload = {
+        "token": PUSH_TOKEN,
         "title": title,
-        "body": text,
-        "device_keys": [BARK_KEY],
-        "group": "科技早报",
-        "level": "timeSensitive",
-        "sound": "minuet",
+        "msg": text,
+        "url": "",
+        "issecure": 0,
+        "sender": "科技早报",
     }
-    resp = requests.post(f"{BARK_SERVER}/push", json=payload, timeout=30)
-    print(f"[info] Bark 响应 {resp.status_code}: {resp.text}", file=sys.stderr)
+    resp = requests.post(PUSH_URL, json=payload, timeout=30)
+    print(f"[info] 推送响应 {resp.status_code}: {resp.text}", file=sys.stderr)
     resp.raise_for_status()
     data = resp.json()
-    if data.get("code") not in (200, None):
-        raise RuntimeError(f"Bark 返回错误: {data}")
+    if str(data.get("code")) != "80000000":
+        raise RuntimeError(f"推送返回错误: {data}")
     return data
 
 
@@ -233,9 +234,9 @@ def main():
     title = time.strftime("科技早报 · %m月%d日")
     try:
         push_bark(text, title)
-        print("[info] 已推送 Bark")
+        print("[info] 已推送")
     except Exception as e:  # noqa: BLE001
-        print(f"[error] Bark 推送失败: {e}", file=sys.stderr)
+        print(f"[error] 推送失败: {e}", file=sys.stderr)
 
 
 if __name__ == "__main__":
