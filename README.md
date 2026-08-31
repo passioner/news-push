@@ -1,18 +1,17 @@
 # 每日科技早报推送
 
-每天 08:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
+每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
 
 ## 工作原理
 
 ```
-GitHub Actions 定时(08:00) → main.py
+GitHub Actions 定时(07:00) → main.py
    ├─ 抓取 RSS（科技/苹果/AI/RC模型/娱乐）
    ├─ 关键词过滤 + 去重
    ├─ DeepSeek 生成 300~500 字中文播报稿
    ├─ 写入 summary/latest.txt 并提交到仓库
    └─ Bark 推送到 iPhone（通知栏文字）
-
-iOS 快捷指令(08:10) → 拉取 latest.txt → 朗读文本 → 车内播放
+iOS 快捷指令(07:10) → 拉取 latest.txt → 朗读文本 → 车内播放
 ```
 
 ## 部署步骤
@@ -54,7 +53,7 @@ git push -u origin main
 ### 4. 配置 iOS 语音朗读
 
 1. 打开「快捷指令」App → 底部「自动化」→ 右上「+」→「创建个人自动化」。
-2. 选「特定时间」→ 设为 `08:10`、每天重复 → 下一步。
+2. 选「特定时间」→ 设为 `07:10`、每天重复 → 下一步。
 3. 添加操作：
    - 「获取 URL 的内容」，URL 填：`https://raw.githubusercontent.com/<你的用户名>/<仓库名>/main/summary/latest.txt`
    - 「朗读文本」，语言选「中文（中国大陆）」，声音可换成你喜欢的（建议 Siri 女声或"婷婷"）。
@@ -68,7 +67,7 @@ git push -u origin main
 
 - **换新闻源 / 加关键词**：编辑 `config/feeds.yaml`。
 - **改播报风格**：编辑 `config/prompt.txt`。
-- **改推送时间**：编辑 `.github/workflows/daily-news.yml` 的 `cron`（注意是 UTC 时间，北京 08:00 = `0 0 * * *`）。
+- **改推送时间**：编辑 `.github/workflows/daily-news.yml` 的 `cron`（注意是 UTC 时间，北京 07:00 = `0 23 * * *`）。
 
 ## 本地测试
 
