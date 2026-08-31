@@ -23,11 +23,17 @@ ROOT = Path(__file__).resolve().parent
 CONFIG_DIR = ROOT / "config"
 SUMMARY_DIR = ROOT / "summary"
 
-BARK_SERVER = os.environ.get("BARK_SERVER", "https://api.day.app").rstrip("/")
-BARK_KEY = os.environ.get("BARK_KEY", "")
-LLM_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "") or os.environ.get("LLM_API_KEY", "")
-LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.deepseek.com").rstrip("/")
-LLM_MODEL = os.environ.get("LLM_MODEL", "deepseek-chat")
+
+def _env(name: str, default: str = "") -> str:
+    v = os.environ.get(name)
+    return v if v else default
+
+
+BARK_SERVER = _env("BARK_SERVER", "https://api.day.app").rstrip("/")
+BARK_KEY = _env("BARK_KEY")
+LLM_API_KEY = _env("DEEPSEEK_API_KEY") or _env("LLM_API_KEY")
+LLM_BASE_URL = _env("LLM_BASE_URL", "https://api.deepseek.com").rstrip("/")
+LLM_MODEL = _env("LLM_MODEL", "deepseek-chat")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
