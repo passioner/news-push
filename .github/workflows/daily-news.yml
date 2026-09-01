@@ -2,8 +2,8 @@ name: Daily News Push
 
 on:
   schedule:
-    # UTC 23:00 = 北京时间 07:00
-    - cron: "0 23 * * *"
+    # UTC 19:00 = 北京时间 03:00（预留 GitHub 定时延迟）
+    - cron: "0 19 * * *"
   workflow_dispatch:
 
 permissions:
