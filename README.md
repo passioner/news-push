@@ -1,11 +1,11 @@
 # 每日科技早报推送
 
-每天 07:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
+每天 03:00（北京时间）自动抓取科技圈热点，用 DeepSeek 生成中文播报稿，推送到 iPhone（Bark），并可通过 iOS 快捷指令在车内语音朗读。
 
 ## 工作原理
 
 ```
-GitHub Actions 定时(07:00) → main.py
+GitHub Actions 定时(03:00) → main.py
    ├─ 抓取 RSS（科技/苹果/AI/RC模型/娱乐）
    ├─ 关键词过滤 + 去重
    ├─ DeepSeek 生成 300~500 字中文播报稿
@@ -90,7 +90,7 @@ DOMAIN-SUFFIX,github.io,PROXY
 
 - **换新闻源 / 加关键词**：编辑 `config/feeds.yaml`。
 - **改播报风格**：编辑 `config/prompt.txt`。
-- **改推送时间**：编辑 `.github/workflows/daily-news.yml` 的 `cron`（注意是 UTC 时间，北京 07:00 = `0 23 * * *`）。
+- **改推送时间**：编辑 `.github/workflows/daily-news.yml` 的 `cron`（注意是 UTC 时间，北京 03:00 = `0 19 * * *`）。
 
 ## 本地测试
 
