@@ -82,6 +82,7 @@ def fetch_feed(feed: dict[str, Any]) -> list[Item]:
 
 def select_candidates(items: list[Item], cfg: dict[str, Any]) -> list[dict[str, Any]]:
     keywords = [str(k).lower() for k in cfg.get("keywords", [])]
+    exclude = [str(k).lower() for k in cfg.get("exclude_keywords", [])]
     top_n = int(cfg.get("top_n_per_feed", 3))
     max_cands = int(cfg.get("max_candidates", 60))
     lookback = int(cfg.get("lookback_hours", 36)) * 3600
@@ -91,6 +92,9 @@ def select_candidates(items: list[Item], cfg: dict[str, Any]) -> list[dict[str, 
     selected = []  # dicts
 
     def keep(title, link, source, category, ts, matched):
+        tl = title.lower()
+        if any(x in tl for x in exclude):
+            return
         key = normalize_title(title)
         if not key or key in seen:
             return
