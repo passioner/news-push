@@ -7,9 +7,11 @@
 """
 
 import argparse
+import calendar
 import os
 import sys
 import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +42,8 @@ HEADERS = {
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
 }
 
+TZ_CN = timezone(timedelta(hours=8))
+
 
 def load_config() -> dict[str, Any]:
     with open(CONFIG_DIR / "feeds.yaml", encoding="utf-8") as f:
@@ -55,7 +59,7 @@ def parse_ts(entry) -> float:
     for key in ("published_parsed", "updated_parsed", "created_parsed"):
         v = entry.get(key)
         if v:
-            return time.mktime(v)
+            return calendar.timegm(v)
     return 0.0
 
 
@@ -222,7 +226,8 @@ def main():
         print("[dry-run] 跳过摘要与推送")
         return
 
-    date_cn = time.strftime("%m月%d日")
+    now_cn = datetime.now(TZ_CN)
+    date_cn = now_cn.strftime("%m月%d日")
     try:
         text = summarize(candidates, date_cn)
         print("[info] 播报稿生成完成，长度", len(text))
@@ -238,7 +243,7 @@ def main():
         return
 
     if BARK_KEY:
-        title = time.strftime("科技早报 · %m月%d日")
+        title = now_cn.strftime("科技早报 · %m月%d日")
         try:
             push_bark(text, title)
             print("[info] 已推送 Bark")
